@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>URL Shortener</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('shortenForm');
+            const resultDiv = document.getElementById('result');
+
+            if (form) {
+                form.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+                    const url = document.getElementById('urlInput').value;
+
+                    const response = await fetch('/shorten', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: `url=${encodeURIComponent(url)}`
+                    });
+
+                    resultDiv.innerHTML = await response.text();
+
+                    // Manually execute script
+                    const script = resultDiv.querySelector("script")
+                    if (script) {
+                        eval(script.innerText)
+                    }
+
+                });
+            }
+        });
+    </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">URL Shortener</h1>
+    <form id="shortenForm" action="/shorten" method="POST">
+        <input
+                type="text"
+                name="url"
+                id="urlInput"
+                placeholder="Enter URL to shorten"
+                required
+                class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 mb-4"
+        />
+        <button
+                type="submit"
+                class="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer"
+        >
+            Shorten
+        </button>
+    </form>
+    <div id="result" class="mt-4 text-center"></div>
+</div>
+</body>
+</html>

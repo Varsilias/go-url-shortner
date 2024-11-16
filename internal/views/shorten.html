@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>URL Shortened</title>
+</head>
+<body>
+<h1 class="text-xl font-bold text-center text-gray-800 mb-6">Shortened URL</h1>
+<p>Your shortened URL is: <a href="/{{.ShortURL}}" target="_blank" class="text-blue-400 underline mb-6">{{.ShortURL}}</a></p>
+<button
+        id="copyButton"
+        data-url="{{.ShortURL}}"
+        class="w-full text-blue-500 font-medium py-2 rounded-md hover:bg-blue-600 hover:text-white transition duration-200 cursor-pointer"
+>Copy to clipboard</button>
+
+<script>
+
+    const copyButton = document.getElementById('copyButton');
+    const url = copyButton.getAttribute('data-url');
+
+    // Log the URL to ensure data-url is populated
+    console.log("Data URL to copy:", url);
+
+    copyButton.addEventListener('click', async function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText("http://localhost:9000/" + url).then(() => {
+                alert('URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        } else {
+            alert('Clipboard API not supported in this browser.');
+        }
+    });
+</script>
+</body>
+</html>
